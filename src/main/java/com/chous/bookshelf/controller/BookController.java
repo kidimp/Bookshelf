@@ -23,6 +23,11 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
+    @GetMapping("/{id}")
+    public Book getBookById(@PathVariable Long id) {
+        return bookService.getBookById(id);
+    }
+
     @PostMapping("/create")
     public Book createBook(@RequestBody Book book) {
         return bookService.createBook(book);

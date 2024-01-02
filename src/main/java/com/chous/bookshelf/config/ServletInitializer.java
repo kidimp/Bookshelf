@@ -1,5 +1,6 @@
-package com.chous.bookshelf;
+package com.chous.bookshelf.config;
 
+import com.chous.bookshelf.BookshelfApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 

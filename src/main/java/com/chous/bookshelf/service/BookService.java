@@ -1,5 +1,6 @@
 package com.chous.bookshelf.service;
 
+import com.chous.bookshelf.annotation.Cacheable;
 import com.chous.bookshelf.entity.Book;
 import com.chous.bookshelf.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,15 @@ public class BookService {
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    // В задании было указано "любого метода, где есть и параметры, и выходное значение". Но для методов create
+    // и update использование кэша теряет смысл, т.к. выходное значение меняется. Поэтому использование кэширования
+    // показываю на примере метода getBookById.
+    @Cacheable
+    public Book getBookById(Long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        return optionalBook.orElse(null);
     }
 
     public Book createBook(Book book) {

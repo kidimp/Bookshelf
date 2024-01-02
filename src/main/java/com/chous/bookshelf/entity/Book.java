@@ -40,4 +40,10 @@ public class Book {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    // Переопределила метод toString(), чтобы при логировании в консоле более наглядно выводилась информация.
+    @Override
+    public String toString() {
+        return "Book title: '" + title + '\'';
+    }
 }

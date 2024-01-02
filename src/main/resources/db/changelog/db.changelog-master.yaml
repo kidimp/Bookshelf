@@ -23,3 +23,20 @@ databaseChangeLog:
               - column:
                   name: description
                   type: varchar(1000)
+  - changeSet:
+      id: 2
+      author: chous
+      changes:
+        - loadData:
+            file: classpath:/data/initial_data.csv
+            separator: ';'
+            tableName: books
+            columns:
+              - column:
+                  name: id
+              - column:
+                  name: title
+              - column:
+                  name: author
+              - column:
+                  name: description
