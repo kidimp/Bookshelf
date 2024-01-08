@@ -1,8 +1,11 @@
 package com.chous.bookshelf.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
+@jakarta.persistence.Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "books")
 public class Book {
 

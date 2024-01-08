@@ -2,6 +2,7 @@ package com.chous.bookshelf.service;
 
 import com.chous.bookshelf.annotation.Cacheable;
 import com.chous.bookshelf.entity.Book;
+import com.chous.bookshelf.repository.BookRepo;
 import com.chous.bookshelf.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,12 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookRepo bookRepo;
 
     @Autowired
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, BookRepo bookRepo) {
         this.bookRepository = bookRepository;
+        this.bookRepo = bookRepo;
     }
 
     public List<Book> getAllBooks() {
@@ -52,5 +55,10 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+
+    public List<String> getAllBooksNames() {
+        return bookRepo.getAllBooksNames();
     }
 }

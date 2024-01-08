@@ -49,4 +49,9 @@ public class BookController {
 //        bookService.deleteBook(id);
 //    }
 
+    @GetMapping("/get-all-books-names")
+    public List<String> getAllBooksNames() {
+        return bookService.getAllBooksNames();
+    }
+
 }
