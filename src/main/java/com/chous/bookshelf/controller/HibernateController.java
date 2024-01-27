@@ -14,12 +14,12 @@ public class HibernateController {
         this.hibernateService = hibernateService;
     }
 
-    @GetMapping("/api/hibernate/test")
+    @GetMapping("/api/v1/hibernate/test")
     public void doTest() {
         hibernateService.testServiceMethod();
     }
 
-    @GetMapping("/api/hibernate/test-query-cache")
+    @GetMapping("/api/v1/hibernate/test-query-cache")
     public void doAnotherTest() {
         hibernateService.queryCacheTestServiceMethod();
     }
