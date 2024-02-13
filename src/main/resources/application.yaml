@@ -3,6 +3,19 @@ spring:
     url: jdbc:postgresql://localhost:5432/bookshelf
     username: chous
     password: chous
+  data:
+    mongodb:
+      authentication-database: admin
+      username: chous
+      password: chous
+      database: bookshelf
+      port: 27017
+      host: localhost
+      auto-index-creation: true
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
   jpa:
     open-in-view: false
     hibernate:
