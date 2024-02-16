@@ -3,6 +3,8 @@ package com.chous.bookshelf.controller;
 import com.chous.bookshelf.entity.Book;
 import com.chous.bookshelf.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,18 +31,21 @@ public class BookController {
     }
 
     @PostMapping()
-    public Book createBook(@RequestBody Book book) {
-        return bookService.createBook(book);
+    public ResponseEntity<Void> createBook(@RequestBody Book book) {
+        bookService.createBook(book);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
-        return bookService.updateBook(id, book);
+    public ResponseEntity<Void> updateBook(@PathVariable Long id, @RequestBody Book book) {
+        bookService.updateBook(id, book);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 //    Можно сделать альтернативным способом, передавая id в теле запроса, чтобы явным образом не передавать id.
