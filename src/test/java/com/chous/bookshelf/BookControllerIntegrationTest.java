@@ -1,37 +1,25 @@
 package com.chous.bookshelf;
 
 import com.chous.bookshelf.entity.Book;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
 public class BookControllerIntegrationTest {
     @LocalServerPort
     private int port;
     @Autowired
     private TestRestTemplate testRestTemplate;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -40,6 +28,7 @@ public class BookControllerIntegrationTest {
     public void testHttpConnection() {
         String response = this.testRestTemplate.getForObject("http://localhost:" + port + "/api/v1/books",
                 String.class);
+
         assertThat(response).isNotNull();
     }
 
@@ -56,54 +45,43 @@ public class BookControllerIntegrationTest {
 
 
     @Test
-    @Transactional()
-    @Rollback
-    public void testCreateBook() throws Exception {
+    public void testCreateBook() {
         Book book = new Book();
-        book.setTitle("Test Create Book Title123123");
+        book.setTitle("Test Create Book Title");
         book.setAuthor("Test Create Book Author");
         book.setDescription("Test Create Book Description");
 
-        String bookJson = objectMapper.writeValueAsString(book);
+        ResponseEntity<Void> response = this.testRestTemplate.exchange("http://localhost:" + port + "/api/v1/books",
+                HttpMethod.POST, new HttpEntity<>(book), Void.class);
 
-        ResultActions result = mockMvc.perform(post("/api/v1/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bookJson));
-        result.andExpect(MockMvcResultMatchers.status().isCreated());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
     }
 
 
     @Test
-    @Transactional
-    @Rollback
-    public void testUpdateBook() throws Exception {
+    public void testUpdateBook() {
         Long id = jdbcTemplate.queryForObject("SELECT id FROM public.books LIMIT 1;", Long.class);
-
-        assertThat(id).isNotNull();
 
         Book bookUpdates = new Book();
         bookUpdates.setTitle("Test Update Book Title1");
         bookUpdates.setAuthor("Test Update Book Author");
         bookUpdates.setDescription("Test Update Book Description");
 
-        String bookJson = objectMapper.writeValueAsString(bookUpdates);
+        ResponseEntity<Void> response = this.testRestTemplate.exchange("http://localhost:" + port + "/api/v1/books/" + id,
+                HttpMethod.PUT, new HttpEntity<>(bookUpdates), Void.class);
 
-        ResultActions result = mockMvc.perform(put("/api/v1/books/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bookJson));
-        result.andExpect(MockMvcResultMatchers.status().isOk());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 
     @Test
-    @Transactional
-    @Rollback
-    public void testDeleteBook() throws Exception {
+    public void testDeleteBook() {
         Long id = jdbcTemplate.queryForObject("SELECT id FROM public.books LIMIT 1;", Long.class);
 
-        assertThat(id).isNotNull();
+        ResponseEntity<Void> response = this.testRestTemplate.exchange("http://localhost:" + port + "/api/v1/books/" + id,
+                HttpMethod.DELETE, null, Void.class);
 
-        ResultActions result = mockMvc.perform(delete("/api/v1/books/{id}", id));
-        result.andExpect(MockMvcResultMatchers.status().isOk());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
