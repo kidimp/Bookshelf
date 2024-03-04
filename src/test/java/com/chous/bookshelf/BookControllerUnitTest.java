@@ -22,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookController.class)
 public class BookControllerUnitTest {
+    private final String API_PATH = "/api/v1/books";
+    private final String API_PATH_W_ID = "/api/v1/books/{id}";
+
     @MockBean
     private BookService bookService;
     @Autowired
@@ -68,7 +71,7 @@ public class BookControllerUnitTest {
 
         when(bookService.getBookById(1L)).thenReturn(book);
 
-        mockMvc.perform(get("/api/v1/books/{id}", 1L))
+        mockMvc.perform(get(API_PATH_W_ID, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Unit Test Book"))
                 .andExpect(jsonPath("$.author").value("Unit Test Author"))
@@ -87,7 +90,7 @@ public class BookControllerUnitTest {
 
         String bookJson = objectMapper.writeValueAsString(book);
 
-        mockMvc.perform(post("/api/v1/books")
+        mockMvc.perform(post(API_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson))
                 .andExpect(status().isCreated());
@@ -104,7 +107,7 @@ public class BookControllerUnitTest {
 
         String bookJson = objectMapper.writeValueAsString(book);
 
-        mockMvc.perform(put("/api/v1/books/{id}", 1L)
+        mockMvc.perform(put(API_PATH_W_ID, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson))
                 .andExpect(status().isOk());
@@ -113,7 +116,7 @@ public class BookControllerUnitTest {
 
     @Test
     void testDeleteBook() throws Exception {
-        mockMvc.perform(delete("/api/v1/books/{id}", 1L)
+        mockMvc.perform(delete(API_PATH_W_ID, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
