@@ -35,11 +35,11 @@ public class BookService {
         return optionalBook.orElse(null);
     }
 
-    public Book createBook(Book book) {
-        return bookRepository.save(book);
+    public void createBook(Book book) {
+        bookRepository.save(book);
     }
 
-    public Book updateBook(Long id, Book updatedBook) {
+    public void updateBook(Long id, Book updatedBook) {
         Optional<Book> optionalBook = bookRepository.findById(id);
 
         if (optionalBook.isPresent()) {
@@ -47,10 +47,8 @@ public class BookService {
             existingBook.setTitle(updatedBook.getTitle());
             existingBook.setAuthor(updatedBook.getAuthor());
             existingBook.setDescription(updatedBook.getDescription());
-            return bookRepository.save(existingBook);
+            bookRepository.save(existingBook);
         }
-
-        return null;
     }
 
     public void deleteBook(Long id) {
