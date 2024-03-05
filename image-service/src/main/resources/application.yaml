@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: image-service
+  config:
+    import: "optional:configserver:http://localhost:8088"
+  data:
+    mongodb:
+      authentication-database: admin
+      username: chous
+      password: chous
+      database: bookshelf
+      port: 27017
+      host: localhost
+      auto-index-creation: true
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
