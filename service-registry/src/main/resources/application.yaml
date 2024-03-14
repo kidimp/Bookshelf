@@ -1,0 +1,14 @@
+server:
+  port: 9001
+
+spring:
+  cloud:
+    consul:
+      config:
+        fail-fast: true
+      host: localhost
+      port: 8500
+  application:
+    name: service-registry
+  config:
+    import: "optional:consul:"
