@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: 'postgres:alpine3.19'
+    container_name: db
+    environment:
+      - POSTGRES_USER=chous
+      - POSTGRES_PASSWORD=chous
+      - POSTGRES_DB=bookshelf
+    networks:
+      - bookshelf-docker-network
+
+  mongo:
+    image: 'mongo:latest'
+    container_name: mongo
+    expose:
+      - "27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=chous
+      - MONGO_INITDB_ROOT_PASSWORD=chous
+      - MONGO_INITDB_DATABASE=bookshelf
+    volumes:
+      - ./image-service/src/main/resources/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - bookshelf-docker-network
+
+  config-server:
+    build:
+      context: /config-server
+      dockerfile: Dockerfile
+    expose:
+      - "8088"
+    networks:
+      - bookshelf-docker-network
+    healthcheck:
+      test: ["CMD-SHELL", " netstat -an | grep -q 8088"]
+
+  api-gateway:
+    build:
+      context: /api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8060:8060"
+    networks:
+      - bookshelf-docker-network
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  book-service:
+    build:
+      context: /book-service
+      dockerfile: Dockerfile
+    expose:
+      - "8081"
+    networks:
+      - bookshelf-docker-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bookshelf
+      - SPRING_DATASOURCE_USERNAME=chous
+      - SPRING_DATASOURCE_PASSWORD=chous
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  image-service:
+    build:
+      context: /image-service
+      dockerfile: Dockerfile
+    expose:
+      - "8082"
+    networks:
+      - bookshelf-docker-network
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongo://mongo:27017/bookshelf
+      - SPRING_DATASOURCE_USERNAME=chous
+      - SPRING_DATASOURCE_PASSWORD=chous
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  consul:
+    image: consul:1.15.4
+    ports:
+      - "8500:8500"
+    networks:
+      - bookshelf-docker-network
+
+networks:
+  bookshelf-docker-network:
+    driver: bridge

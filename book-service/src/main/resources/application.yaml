@@ -2,9 +2,16 @@ spring:
   application:
     name: book-service
   config:
-    import: "optional:configserver:http://localhost:8088"
+    import: "optional:configserver:http://config-server:8088"
+  cloud:
+    consul:
+      host: consul
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+        instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   datasource:
-    url: jdbc:postgresql://localhost:5432/bookshelf
+    url: jdbc:postgresql://db:5432/bookshelf
     username: chous
     password: chous
   jpa:

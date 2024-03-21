@@ -6,8 +6,11 @@ spring:
     consul:
       config:
         fail-fast: true
-      host: localhost
+      host: config-server
       port: 8500
+      discovery:
+        prefer-ip-address: true
+        instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   application:
     name: service-registry
   config:
