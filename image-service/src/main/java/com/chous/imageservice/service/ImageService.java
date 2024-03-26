@@ -52,4 +52,8 @@ public class ImageService {
         return GridFSBuckets.create(db);
     }
 
+    public void deleteBookImageById(Long bookId) {
+        Query query = Query.query(Criteria.where("metadata.book_id").is(bookId));
+        gridFsOperations.delete(query);
+    }
 }

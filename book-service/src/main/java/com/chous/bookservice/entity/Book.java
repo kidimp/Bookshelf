@@ -19,6 +19,7 @@ public class Book {
     private String description;
 
     public Book() {
+        // An empty constructor is required for Spring
     }
 
     public String getTitle() {

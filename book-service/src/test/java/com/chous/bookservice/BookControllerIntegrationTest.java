@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BookControllerIntegrationTest {
+class BookControllerIntegrationTest {
     private final String URL = "http://localhost:";
     private final String API_PATH = "/api/v1/books";
     private final String QUERY = "SELECT id FROM public.books LIMIT 1;";
@@ -29,7 +29,7 @@ public class BookControllerIntegrationTest {
 
 
     @Test
-    public void testHttpConnection() {
+    void testHttpConnection() {
         String response = this.testRestTemplate.getForObject(URL + port + API_PATH,
                 String.class);
 
@@ -38,7 +38,7 @@ public class BookControllerIntegrationTest {
 
 
     @Test
-    public void testGetBookById() {
+    void testGetBookById() {
         Long id = jdbcTemplate.queryForObject(QUERY, Long.class);
 
         Book existingBook = this.testRestTemplate.getForObject(URL + port + API_PATH + "/" + id, Book.class);
@@ -48,7 +48,7 @@ public class BookControllerIntegrationTest {
 
 
     @Test
-    public void testCreateBook() {
+    void testCreateBook() {
         Book book = new Book();
         book.setTitle("Test Create Book Title");
         book.setAuthor("Test Create Book Author");
@@ -63,7 +63,7 @@ public class BookControllerIntegrationTest {
 
 
     @Test
-    public void testUpdateBook() {
+    void testUpdateBook() {
         Long id = jdbcTemplate.queryForObject(QUERY, Long.class);
 
         Book bookUpdates = new Book();
@@ -79,7 +79,7 @@ public class BookControllerIntegrationTest {
 
 
     @Test
-    public void testDeleteBook() {
+    void testDeleteBook() {
         Long id = jdbcTemplate.queryForObject(QUERY, Long.class);
 
         ResponseEntity<Void> response = this.testRestTemplate.exchange(URL + port + API_PATH + "/" + id,

@@ -5,6 +5,7 @@ import com.chous.bookservice.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, KafkaTemplate<String, String> kafkaTemplate) {
         this.bookService = bookService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @GetMapping()
@@ -45,6 +48,7 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
+        kafkaTemplate.send("book-topic", id.toString());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
