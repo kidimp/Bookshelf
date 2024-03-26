@@ -29,11 +29,11 @@ public class HibernateSession {
 
             logger.info("Fetching Book with id 1 from the database...");
             Book book1 = session.get(Book.class, 1L);
-            logger.info("Book 1 Title: " + book1.getTitle());
+            logger.info("Book 1 Title: {}", book1.getTitle());
 
             logger.info("Fetching Book with id 1 again...");
             Book book2 = session.get(Book.class, 1L);
-            logger.info("Book 2 Title: " + book2.getTitle());
+            logger.info("Book 2 Title: {}", book2.getTitle());
 
             logger.info("Updating Book 1 title...");
             book1.setTitle("Updated Title");
@@ -43,7 +43,7 @@ public class HibernateSession {
 
             logger.info("Fetching Book with id 1 again after update...");
             Book book3 = session.get(Book.class, 1L);
-            logger.info("Book 3 Title: " + book3.getTitle());
+            logger.info("Book 3 Title: {}", book3.getTitle());
 
             logger.info("Committing transaction...");
             transaction.commit();

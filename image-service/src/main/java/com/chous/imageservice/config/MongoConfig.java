@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -46,9 +45,9 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     @Override
     protected void configureClientSettings(MongoClientSettings.Builder builder) {
         builder.credential(MongoCredential.createCredential(username, database, password.toCharArray()))
-                .applyToClusterSettings(settings -> {
-                    settings.hosts(Collections.singletonList(new ServerAddress(host, port)));
-                });
+                .applyToClusterSettings(settings ->
+                    settings.hosts(Collections.singletonList(new ServerAddress(host, port)))
+                );
     }
 
     @Bean

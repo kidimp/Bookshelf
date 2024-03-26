@@ -1,5 +1,8 @@
 package com.chous.imageservice.controller;
 
+import com.chous.imageservice.exception.ImageDownloadException;
+import com.chous.imageservice.exception.ImageUploadException;
+import com.chous.imageservice.exception.OpenFeignException;
 import com.chous.imageservice.feign.ImageClient;
 import com.chous.imageservice.service.ImageService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -42,7 +45,7 @@ public class ImageController {
         try {
             imageId = imageService.uploadImage(file, id);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ImageUploadException("Failed to upload image", e);
         }
 
         return ResponseEntity.ok("Image uploaded successfully");
@@ -71,7 +74,7 @@ public class ImageController {
                     .body(inputStreamResource);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error downloading image", e);
+            throw new ImageDownloadException("Failed to download image", e);
         }
     }
 
@@ -91,9 +94,9 @@ public class ImageController {
     public ResponseEntity<String> doFeign() {
         try {
             ResponseEntity<String> status = imageClient.getStatus();
-            logger.info("Checking Feign client work " + status);
+            logger.info("Checking Feign client work {}", status);
         } catch (Exception e) {
-            throw new RuntimeException("Spring Cloud OpenFeign Failed", e);
+            throw new OpenFeignException("Spring Cloud OpenFeign Failed", e);
         }
         return ResponseEntity.ok("Feign client worked successfully");
     }
@@ -105,8 +108,8 @@ public class ImageController {
         return imageClient.getActivity();
     }
 
+    // The "Exception ex" parameter is necessary for correct working of "fallbackMethod".
     public ResponseEntity<String> fallbackRandomActivity(Exception ex) {
         return ResponseEntity.ok("Randomly generated activity in case of unavailability of book-service!");
     }
 }
-

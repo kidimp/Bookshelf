@@ -9,5 +9,6 @@ public class Image {
     private String id;
 
     public Image() {
+        // An empty constructor is required for Spring
     }
 }
