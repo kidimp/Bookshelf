@@ -5,6 +5,8 @@ services:
   db:
     image: 'postgres:alpine3.19'
     container_name: db
+    expose:
+      - "5432"
     environment:
       - POSTGRES_USER=chous
       - POSTGRES_PASSWORD=chous
@@ -26,6 +28,33 @@ services:
     networks:
       - bookshelf-docker-network
 
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    expose:
+      - "2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOOKEEPER_CLIENT_PORT=2181
+    networks:
+      - bookshelf-docker-network
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    user: root
+    expose:
+      - "9092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    networks:
+      - bookshelf-docker-network
+    depends_on:
+      - zookeeper
+
   config-server:
     build:
       context: /config-server
@@ -35,7 +64,7 @@ services:
     networks:
       - bookshelf-docker-network
     healthcheck:
-      test: ["CMD-SHELL", " netstat -an | grep -q 8088"]
+      test: [ "CMD-SHELL", " netstat -an | grep -q 8088" ]
 
   api-gateway:
     build:
@@ -63,6 +92,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=chous
       - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
     depends_on:
+      kafka:
+        condition: service_started
       config-server:
         condition: service_healthy
 
@@ -79,6 +110,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=chous
       - SPRING_DATASOURCE_PASSWORD=chous
     depends_on:
+      kafka:
+        condition: service_started
       config-server:
         condition: service_healthy
 

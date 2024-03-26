@@ -1,7 +1,7 @@
 # bookshelf-microservice-docker
 Java 17 and Spring Boot version 3.2.3 are used.
 
-There are 5 modules: config-server, service-registry, api-gateway, book-service, image-service.
+There are 4 modules: config-server, api-gateway, book-service, image-service.
 
 Each module has its own Dockerfile and application.yaml which contain ip, port and other settings.
 
@@ -28,7 +28,10 @@ Each module has its own Dockerfile and application.yaml which contain ip, port a
 
 consul 8500 <br>
 config-server 8088 <br>
-service-registry 9001 <br>
 api-gateway 8060 <br>
 book-service 8081 <br>
 image-service 8082 <br>
+postgres 5432 <br>
+mongo 27017 <br>
+zookeeper 2181 <br>
+kafka 9092 <br>

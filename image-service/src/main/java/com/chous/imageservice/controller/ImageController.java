@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,6 +73,14 @@ public class ImageController {
         } catch (Exception e) {
             throw new RuntimeException("Error downloading image", e);
         }
+    }
+
+    @KafkaListener(
+            topics = "book-topic",
+            groupId = "${spring.kafka.consumer.group-id}"
+    )
+    public void deleteImage(Long id) {
+        imageService.deleteBookImageById(id);
     }
 
 
