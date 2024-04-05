@@ -5,6 +5,8 @@ There are 4 modules: config-server, api-gateway, book-service, image-service.
 
 Each module has its own Dockerfile and application.yaml which contain ip, port and other settings.
 
+<b>Steps to build and run:</b>
+
 1. In each microservice, delete the .gradle and build folders.
 
 2. In the root of each microservice, create a Dockerfile file and fill it in.
@@ -20,7 +22,7 @@ Each module has its own Dockerfile and application.yaml which contain ip, port a
    <p>To build without tests <b>./gradlew build -x test</b>
 
 5. After we have completed the build of each microservice in Terminal, we return to the common directory, e.g.: 
-<i>C:\Users\Chous\IdeaProjects\bookshelf\book-service</i> and execute:
+<i>C:\Users\Chous\IdeaProjects\bookshelf</i> and execute:
    <p><b>docker-compose up --build</b><p>
 
 <p>
