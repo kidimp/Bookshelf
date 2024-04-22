@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
-public class BookControllerUnitTest {
+class BookControllerUnitTest {
     private final String API_PATH = "/api/v1/books";
     private final String API_PATH_W_ID = "/api/v1/books/{id}";
 
