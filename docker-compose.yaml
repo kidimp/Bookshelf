@@ -56,6 +56,7 @@ services:
       - zookeeper
 
   config-server:
+    image: 'config-server:latest'
     build:
       context: /config-server
       dockerfile: Dockerfile
@@ -67,6 +68,7 @@ services:
       test: [ "CMD-SHELL", " netstat -an | grep -q 8088" ]
 
   api-gateway:
+    image: 'api-gateway:latest'
     build:
       context: /api-gateway
       dockerfile: Dockerfile
@@ -79,6 +81,7 @@ services:
         condition: service_healthy
 
   book-service:
+    image: 'book-service:latest'
     build:
       context: /book-service
       dockerfile: Dockerfile
@@ -98,6 +101,7 @@ services:
         condition: service_healthy
 
   image-service:
+    image: 'image-service:latest'
     build:
       context: /image-service
       dockerfile: Dockerfile
@@ -116,7 +120,7 @@ services:
         condition: service_healthy
 
   consul:
-    image: consul:1.15.4
+    image: 'consul:1.15.4'
     ports:
       - "8500:8500"
     networks:
