@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: config-server-service
+  name: config-server
 spec:
   selector:
     app: config-server
@@ -13,7 +13,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: config-server-deployment
+  name: config-server
   labels:
     app: config-server
 spec:
@@ -31,13 +31,3 @@ spec:
           image: 192.168.100.59:8000/bookshelf-sonatype-nexus-repository/config-server:latest
           ports:
             - containerPort: 8088
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - netstat -an | grep -q 8088
-            initialDelaySeconds: 10
-            periodSeconds: 5
-#            networks:
-#              - bookshelf-docker-network

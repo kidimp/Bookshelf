@@ -13,9 +13,9 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consul-deployment
+  name: consul
   labels:
-    app: mongodb
+    app: consul
 spec:
   replicas: 1
   selector:
