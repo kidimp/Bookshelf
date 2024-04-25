@@ -44,3 +44,15 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: postgres-root-password
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spring-prometheus-demo-service-monitor
+spec:
+  selector:
+    matchLabels:
+      app: book-service
+  endpoints:
+    - port: http-traffic
+      path: "/actuator/prometheus"
