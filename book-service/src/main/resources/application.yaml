@@ -46,7 +46,11 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
-  endpoint:
+        include: health, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
     metrics:
-      enabled: true
+      export:
+        enabled: true
